@@ -1,0 +1,19 @@
+@font-face {
+	font-family: 'Vazirmatn';
+	src: url('Farsi-Digits/Vazirmatn-FD-Regular.woff2') format('woff2'),
+		/* Modern Browsers */
+		url('Farsi-Digits/Vazirmatn-FD-Regular.ttf') format('truetype');
+	/* Safari, Android, iOS */
+	font-weight: normal;
+	font-style: normal;
+	text-rendering: optimizeLegibility;
+	font-display: auto;
+}
+
+*{
+	direction: rtl !important;
+}
+
+body{
+    font-family: 'Vazirmatn';
+}

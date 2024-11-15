@@ -1,0 +1,11 @@
+a {
+    text-decoration: none !important;
+}
+
+a .card {
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+}
+
+a .card:hover {
+    opacity: 0.8;
+}
