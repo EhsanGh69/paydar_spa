@@ -21,4 +21,8 @@ export const DataContext = createContext({
   setOrderingField: () => {},
   activeFields: [],
   selectiveFields: [],
+  contentRef: null,
+  showActionBtns: true,
+  setShowActionBtns: () => {},
+  downloadExcel: () => {}
 });

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useDownloadExcel } from 'react-export-table-to-excel'
 
 import DataCard from "../../components/data/DataCard"
-
 import { singleData, orderData, filterData, dataFields } from "../../services/dataServices"
 import { DataContext } from "../../context/dataContext"
 import { setPaginate } from "../../helpers/dataHelpers"
@@ -16,6 +16,13 @@ export default function Personnel() {
     const [orderingField, setOrderingField] = useState("")
     const [activeFields, setActiveFields] = useState([])
     const [selectiveFields, setSelectiveFields] = useState([])
+    const contentRef = useRef(null)
+    const [showActionBtns, setShowActionBtns] = useState(true)
+    const { onDownload } = useDownloadExcel({
+      currentTableRef: contentRef.current,
+      filename: 'Personnel table',
+      sheet: 'Personnel'
+    })
 
     let pageSize = 3
 
@@ -85,6 +92,10 @@ export default function Personnel() {
         activePersonnelFields()
     }, [])
 
+    useEffect(() => {
+      setTimeout(() => setShowActionBtns(true), 1000)
+    }, [showActionBtns])
+
 
   return (
     <>
@@ -110,7 +121,11 @@ export default function Personnel() {
             setOrderingField,
             getFilteredData: getFilteredPersonnel,
             selectiveFields,
-            activeFields
+            activeFields,
+            contentRef,
+            showActionBtns,
+            setShowActionBtns,
+            downloadExcel: onDownload
         }}>
             <DataCard />
         </DataContext.Provider>
