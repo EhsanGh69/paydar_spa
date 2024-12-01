@@ -2,6 +2,7 @@ from django.db import models
 
 from django_jalali.db import models as jmodels
 
+
 class Personnel(models.Model):
     # string fields
     full_name = models.CharField(max_length=250, null=True, blank=True, verbose_name="نام و نام خانوادگی")
@@ -35,6 +36,29 @@ class Personnel(models.Model):
         verbose_name = "پرسنل"
         verbose_name_plural = "پرسنل"
 
+    def __str__(self):
+        return self.full_name
+    
+
+class Owner(models.Model):
+    OWNERSHIP_TYPES = (
+        ('real', 'حقیقی'),
+        ('legal', 'حقوقی')
+    )
+    full_name = models.CharField(max_length=250, null=True, blank=True, verbose_name="نام و نام خانوادگی")
+    phone = models.CharField(max_length=20, null=True, blank=True, verbose_name="تلفن ثابت")
+    mobile = models.CharField(max_length=20, null=True, blank=True, verbose_name="موبایل")
+    address = models.TextField(null=True, blank=True, verbose_name="آدرس")
+    descriptions = models.TextField(null=True, blank=True, verbose_name="توضیحات")
+    national_id = models.CharField(max_length=10, null=True, blank=True, verbose_name="کد ملی")
+    ownership_type = models.CharField(max_length=5, choices=OWNERSHIP_TYPES, null=True, blank=True, verbose_name='نوع مالکیت')
+    created_time = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_time = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ ویرایش")
+
+    class Meta:
+        verbose_name = "مالک"
+        verbose_name_plural = "مالکین"
 
     def __str__(self):
         return self.full_name
+
