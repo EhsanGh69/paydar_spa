@@ -15,6 +15,7 @@ export default function FieldsSettings() {
 
     const [fieldsStatus, setFieldsStatus] = useState({})
     const [fieldsSelective, setFieldsSelective] = useState({})
+    const [fieldsRequirement, setFieldsRequirement] = useState({})
 
     const [loading, setLoading] = useState(false)
 
@@ -37,13 +38,22 @@ export default function FieldsSettings() {
         })
     }
 
-    async function getFields(model){
+    const getFormRequirement = (e) => {
+        setFieldsRequirement({
+            ...fieldsRequirement,
+            [e.target.name]: e.target.value === 'true'
+        })
+    }
+
+    useEffect(() => console.log(fieldsRequirement), [fieldsRequirement])
+
+    async function getFields(model) {
         try {
             setLoading(true)
             const { data } = await dataFields(model)
             setFields(JSON.parse(data.fields_data))
             setLoading(false)
-  
+
         } catch (err) {
             console.log(err)
             setLoading(false)
@@ -52,20 +62,26 @@ export default function FieldsSettings() {
 
     useEffect(() => {
         const statusObj = {}
-        for(const field of fields) {
+        for (const field of fields) {
             statusObj[field.name] = field.status
         }
         setFieldsStatus({ ...statusObj })
 
         const selectiveObj = {}
-        for(const field of fields) {
+        for (const field of fields) {
             selectiveObj[field.name] = field.selective
         }
         setFieldsSelective({ ...selectiveObj })
+
+        const requirementObj = {}
+        for (const field of fields) {
+            requirementObj[field.name] = field.required
+        }
+        setFieldsRequirement({ ...requirementObj })
     }, [fields])
 
     useEffect(() => {
-        if(selectedModel.name) getFields(selectedModel.name)
+        if (selectedModel.name) getFields(selectedModel.name)
     }, [selectedModel])
 
     const models = useMemo(() => {
@@ -78,10 +94,13 @@ export default function FieldsSettings() {
 
     async function updateFields(e) {
         e.preventDefault()
-        const allFields = [ ...fields ]
+        const allFields = [...fields]
         for (const field of allFields) {
             field.status = fieldsStatus[field.name]
-            field.selective = fieldsSelective[field.name]
+            if (fieldsStatus[field.name])
+                field.selective = fieldsSelective[field.name]
+            else field.selective = false
+            field.required = fieldsRequirement[field.name]
         }
         const updatedData = {
             model_name: selectedModel.name,
@@ -92,7 +111,7 @@ export default function FieldsSettings() {
         try {
             const { status } = await updateDataFields(selectedModel.name, updatedData)
 
-            if(status === 200) {
+            if (status === 200) {
                 navigate('/settings/fields')
                 successNotify('تغییرات با موفقیت ثبت شد')
             }
@@ -117,73 +136,103 @@ export default function FieldsSettings() {
                         </div>
                     </div>
                 </div>
-                    { selectChange
-                        ? loading 
+                {selectChange
+                    ? loading
+                        ? (
+                            <img src={spinnerGif} className="d-block m-auto"
+                                style={{ width: "200px" }} alt="data loading" />
+                        )
+                        : fields.length > 0
                             ? (
-                                <img src={spinnerGif} className="d-block m-auto"
-                                style={{width: "200px"}} alt="data loading"/>
-                            )
-                            : fields.length > 0 
-                                ? (
-                                    <form method="post" onSubmit={updateFields}>
-                                        <fieldset className="row pl-4 border mb-4">
-                                            <legend className="py-3">
-                                                <span className="bg-info p-2 rounded h5">فیلدهای فعال</span>
-                                            </legend>
-                                            {fields.map((field, index) => (
-                                                <div key={index} className="col-6 col-lg-4 col-xl-3 mb-2">
-                                                    <div className="input-group p-2 bg-warning">
-                                                        <input type="checkbox" 
-                                                            className="form-check-input ml-1" 
-                                                            checked={fieldsStatus[field.name]} 
-                                                            name={field.name} 
-                                                            onChange={(e) => getFormStatus(e)}/>
+                                <form method="post" onSubmit={updateFields}>
+                                    <fieldset className="row pl-4 border mb-4">
+                                        <legend className="py-3">
+                                            <span className="bg-info p-2 rounded h5">فیلدهای فعال</span>
+                                        </legend>
+                                        {fields.map((field, index) => (
+                                            <div key={index} className="col-6 col-lg-4 col-xl-3 mb-2">
+                                                <div className="bg-warning p-2 ">
+                                                    <div className="input-group p-1">
+                                                        <input type="checkbox"
+                                                            className="form-check-input ml-1"
+                                                            checked={fieldsStatus[field.name]}
+                                                            name={field.name}
+                                                            onChange={(e) => getFormStatus(e)} />
                                                         <label className="form-check-label ml-4">
                                                             {field.title}
                                                         </label>
                                                     </div>
-                                                </div>
-                                            ))}
-                                        </fieldset>
-
-                                        <fieldset className="row pl-4 border my-4">
-                                            <legend className="py-3">
-                                                <span className="bg-info p-2 rounded h5">فیلدهای اصلی</span>
-                                            </legend>
-                                            {fields.map((field, index) => (
-                                                <>
-                                                    {field.status && (
-                                                        <div key={index} 
-                                                        className="col-6 col-lg-4 col-xl-3 mb-2">
-                                                            <div className="input-group p-2 bg-danger">
-                                                                <input type="checkbox" 
-                                                                className="form-check-input ml-1" 
-                                                                checked={fieldsSelective[field.name]} 
-                                                                name={field.name} 
-                                                                onChange={(e) => getFormSelective(e)}/>
-                                                                <label className="form-check-label ml-4">
-                                                                    {field.title}
-                                                                </label>
-                                                            </div>
-                                                            
+                                                    <div className="p-2 d-flex input-group">
+                                                        <div>
+                                                            <input type="radio" name={field.name}
+                                                                checked={fieldsRequirement[field.name]}
+                                                                className="form-check-input ml-1"
+                                                                value="true"
+                                                                onChange={(e) => getFormRequirement(e)}
+                                                            />
+                                                            <label className="form-check-label ml-4">
+                                                                اجباری
+                                                            </label>
                                                         </div>
-                                                    )}
-                                                </>
-                                                
-                                            ))}
-                                        </fieldset>
-                                        <button className="btn btn-success btn-lg" type="submit">
-                                            ثبت تغییرات
-                                        </button>
-                                    </form>
-                                )
-                                    
-                                : <h3 className="alert alert-warning text-center text-danger">اطلاعاتی جهت نمایش وجود ندارد</h3>
-                        : null
-                    }
+                                                        <div>
+                                                            <input type="radio" name={field.name}
+                                                                checked={!fieldsRequirement[field.name]}
+                                                                className="form-check-input ml-1"
+                                                                value="false"
+                                                                onChange={(e) => getFormRequirement(e)}
+                                                            />
+                                                            <label className="form-check-label ml-4">
+                                                                اختیاری
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </fieldset>
+
+                                    <fieldset className="row pl-4 border my-4">
+                                        <legend className="py-3">
+                                            <span className="bg-info p-2 rounded h5">فیلدهای اصلی</span>
+                                        </legend>
+                                        {fields.map((field, index) => (
+                                            <>
+                                                {field.status && (
+                                                    <div key={index}
+                                                        className="col-6 col-lg-4 col-xl-3 mb-2">
+                                                        <div className="input-group p-2 bg-danger">
+                                                            <input type="checkbox"
+                                                                className="form-check-input ml-1"
+                                                                checked={fieldsSelective[field.name]}
+                                                                name={field.name}
+                                                                onChange={(e) => getFormSelective(e)} />
+                                                            <label className="form-check-label ml-4">
+                                                                {field.title} {" "}
+                                                                {field.required
+                                                                    ? "(اجباری)"
+                                                                    : "(اختیاری)"
+                                                                }
+                                                            </label>
+                                                        </div>
+
+                                                    </div>
+                                                )}
+                                            </>
+
+                                        ))}
+                                    </fieldset>
+                                    <button className="btn btn-success btn-lg" type="submit">
+                                        ثبت تغییرات
+                                    </button>
+                                </form>
+                            )
+
+                            : <h3 className="alert alert-warning text-center text-danger">اطلاعاتی جهت نمایش وجود ندارد</h3>
+                    : null
+                }
 
                 <ToastContainer />
-                
+
             </div>
         </div>
     )

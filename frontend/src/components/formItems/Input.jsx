@@ -6,7 +6,7 @@ export default function Input({type, name, value, holder, handler, error}) {
       </div>
       {name.includes('date') 
       ? (
-          <input 
+          <input
               type={type} name={name} value={value}
               onInput={handler} 
               className="form-control" data-jdp
