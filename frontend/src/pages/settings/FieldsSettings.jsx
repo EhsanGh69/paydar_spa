@@ -20,8 +20,13 @@ export default function FieldsSettings() {
     const [loading, setLoading] = useState(false)
 
     function selectHandler(e) {
-        setSelectChange(true)
-        setSelectedModel({ name: e.target.value, title: e.target.innerText })
+        if(e.target.value !== '') {
+            setSelectChange(true)
+            const foundModel = models.find(model => model.name === e.target.value)
+            setSelectedModel({ name: e.target.value, title: foundModel.title })
+        }else {
+            setSelectChange(false)
+        }
     }
 
     const getFormStatus = (e) => {
@@ -44,8 +49,6 @@ export default function FieldsSettings() {
             [e.target.name]: e.target.value === 'true'
         })
     }
-
-    useEffect(() => console.log(fieldsRequirement), [fieldsRequirement])
 
     async function getFields(model) {
         try {
@@ -81,12 +84,13 @@ export default function FieldsSettings() {
     }, [fields])
 
     useEffect(() => {
-        if (selectedModel.name) getFields(selectedModel.name)
-    }, [selectedModel])
+        if (selectChange && selectedModel.name) getFields(selectedModel.name)
+    }, [selectedModel, selectChange])
 
     const models = useMemo(() => {
         return [
-            { name: "personnel", title: "پرسنل" }
+            { name: "personnel", title: "پرسنل" },
+            { name: "owner", title: "مالکین" },
         ]
     }, [selectChange])
 
@@ -126,9 +130,8 @@ export default function FieldsSettings() {
                 <div className="row">
                     <div className="col-12 col-md-10 col-lg-8 col-xl-4">
                         <div className="form-group">
-                            <label>آیتم مورد نظر را انتخاب نمایید:</label>
                             <select className="form-control" onChange={(e) => selectHandler(e)}>
-                                <option value=""></option>
+                                <option value="">آیتم مورد نظر را انتخاب نمایید   ...</option>
                                 {models.map((model, index) => (
                                     <option value={model.name} key={index}>{model.title}</option>
                                 ))}

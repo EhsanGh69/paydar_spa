@@ -14,7 +14,7 @@ export default function Select({name, value, options, title, handler, error}) {
         </select>
       </div>
       {error && (
-          <small className="form-text text-danger">{error}</small>
+          <strong className="form-text text-danger">{error}</strong>
       )}
     </>
   )

@@ -41,17 +41,13 @@ class Personnel(models.Model):
     
 
 class Owner(models.Model):
-    OWNERSHIP_TYPES = (
-        ('real', 'حقیقی'),
-        ('legal', 'حقوقی')
-    )
     full_name = models.CharField(max_length=250, null=True, blank=True, verbose_name="نام و نام خانوادگی")
     phone = models.CharField(max_length=20, null=True, blank=True, verbose_name="تلفن ثابت")
     mobile = models.CharField(max_length=20, null=True, blank=True, verbose_name="موبایل")
     address = models.TextField(null=True, blank=True, verbose_name="آدرس")
     descriptions = models.TextField(null=True, blank=True, verbose_name="توضیحات")
     national_id = models.CharField(max_length=10, null=True, blank=True, verbose_name="کد ملی")
-    ownership_type = models.CharField(max_length=5, choices=OWNERSHIP_TYPES, null=True, blank=True, verbose_name='نوع مالکیت')
+    ownership_type = models.CharField(max_length=10, null=True, blank=True, verbose_name='نوع مالکیت')
     created_time = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     updated_time = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ ویرایش")
 

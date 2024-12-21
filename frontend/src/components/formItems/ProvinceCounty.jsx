@@ -81,7 +81,7 @@ export default function ProvinceCounty({handler, province, county, error}) {
         </div>
 
         {error && (
-            <small className="form-text text-danger">{error}</small>
+            <strong className="form-text text-danger">{error}</strong>
         )}
     </>
   )

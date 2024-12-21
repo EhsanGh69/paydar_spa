@@ -9,9 +9,9 @@ export default function Sidebar() {
     const menuItems = {
         persons: [
             {title: "پرسنل", name: "personnel", icon: "fa-people-roof"},
+            {title: "مالکین", name: "owners", icon: "fa-person-shelter"},
             {title: "پیمانکاران", name: "contractors", icon: "fa-person-digging"},
             {title: "تأمین کنندگان", name: "suppliers", icon: "fa-people-line"},
-            {title: "شرکاء", name: "suppliers", icon: "fa-people-line"},
         ],
         projects: [
             {title: "پروژه‌های جاری", name: "current_projects", icon: "fa-trowel-bricks"},

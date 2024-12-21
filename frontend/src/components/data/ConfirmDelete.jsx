@@ -5,13 +5,13 @@ import { deleteData } from "../../services/dataServices"
 
 export default function ConfirmDelete({warnNotify}) {
 
-    const { data, app, model, getOrderedData, orderingField, currentPage } = useContext(DataContext)
+    const { firstField ,data, app, model, getOrderedData, orderingField, currentPage } = useContext(DataContext)
 
     const confirmBtnHandler = () => {
         deleteData(app, model, data.id)
         setTimeout(() => {
             getOrderedData(orderingField, currentPage)
-            warnNotify(`${data.full_name} با موفقیت حذف شد`)
+            warnNotify(`${data[firstField]} با موفقیت حذف شد`)
         }, 500)
     }
 
@@ -26,7 +26,7 @@ export default function ConfirmDelete({warnNotify}) {
                 </button>
             </div>
             <div className="modal-body">
-                آیا از حذف {data.full_name} اطمینان دارید؟
+                آیا از حذف {data[firstField]} اطمینان دارید؟
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal">انصراف</button>

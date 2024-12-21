@@ -4,11 +4,12 @@ import { DataContext } from "../../context/dataContext"
 import { updateData } from "../../services/dataServices"
 import { makeFormData } from "../../helpers/dataHelpers"
 import UpdateForm from "../formItems/UpdateForm"
+import { fieldsValidator } from "../../validations/fieldsValidator"
 
 export default function DataUpdate({setShowUpdate, infoNotify}) {
 
     const { 
-        app, model, data, currentPage, getOrderedData,
+        firstField, app, model, data, currentPage, getOrderedData,
         activeFields, orderingField
     } = useContext(DataContext)
 
@@ -50,17 +51,26 @@ export default function DataUpdate({setShowUpdate, infoNotify}) {
         event.preventDefault()
         const formData = makeFormData(fieldNames, dataObj)
         try {
+            await fieldsValidator(activeFields).validate(dataObj, { abortEarly: false })
+
             const { status } = await updateData(app, model, data.id, formData)
 
             if(status === 200) {
                 setDataObj({})
                 setShowUpdate(false)
                 getOrderedData(orderingField, currentPage)
-                infoNotify(`${data.full_name} با موفقیت ویرایش شد`)
+                infoNotify(`${data[firstField]} با موفقیت ویرایش شد`)
             }
-        } catch (err) {
-            console.log(err.response.data)
-            setErrors(err.response.data)
+        } catch (error) {
+            if (error.inner !== undefined) {
+                const errorsObj = {}
+                for (const err of error.inner) {
+                    errorsObj[err.path] = err.message
+                }
+                setErrors(errorsObj)
+            }else {
+                console.log(error)
+            }
         }
     }
 
