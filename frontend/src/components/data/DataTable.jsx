@@ -107,7 +107,9 @@ export default function DataTable({setShowUpdate, setShowDetails, setShowCreate}
                                             : field.name === 'province_county' 
                                             ? `${JSON.parse(data[field.name]).province} - ${JSON.parse(data[field.name]).county}`
                                             : field.name.includes('date') 
-                                            ? data[field.name].replaceAll('-', '/') 
+                                            ? data[field.name].replaceAll('-', '/')
+                                            : field.type === 'file'
+                                            ? <img src={data[field.name]} alt={field.title} width={100} />
                                             : data[field.name]
                                         }
                                     </td>

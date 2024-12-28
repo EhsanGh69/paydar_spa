@@ -18,7 +18,7 @@ export default function DataCreate({ setShowCreate, successNotify }) {
     const initialValues = useMemo(() => {
         const fieldsObj = {}
         for (const field of activeFields) {
-            fieldsObj[field.name] = ''
+            fieldsObj[field.name] = field.type === 'number' ? 0 : ''
         }
         return fieldsObj
     })
@@ -32,17 +32,28 @@ export default function DataCreate({ setShowCreate, successNotify }) {
     }, [])
 
     const getFormData = (event) => {
-        console.log('get form data')
-        setDataObj({
-            ...dataObj,
-            [event.target.name]: event.target.value
-        })
+        if (event.target.type === 'file') {
+            setDataObj({
+                ...dataObj,
+                [event.target.name]: event.target.files[0]
+            })
+        } else if (event.target.type === 'number') {
+            setDataObj({
+                ...dataObj,
+                [event.target.name]: isNaN(event.target.value) ? 0 : Number(event.target.value)
+            })
+        } else {
+            setDataObj({
+                ...dataObj,
+                [event.target.name]: event.target.value
+            })
+        }
     }
 
     const resetFields = () => {
         const fieldsObj = {}
         for (const field of activeFields) {
-            fieldsObj[field.name] = ''
+            fieldsObj[field.name] = field.type === 'number' ? 0 : '' 
         }
         setDataObj({ ...fieldsObj })
         setErrors({})
@@ -52,7 +63,13 @@ export default function DataCreate({ setShowCreate, successNotify }) {
         event.preventDefault()
 
         try {
-            await fieldsValidator(activeFields).validate(dataObj, { abortEarly: false })
+            const fileField = activeFields.find(field => field.type === 'file')
+            if (fileField !== undefined)
+                await fieldsValidator(activeFields, dataObj[fileField.name])
+                    .validate(dataObj, { abortEarly: false })
+            else
+                await fieldsValidator(activeFields)
+                    .validate(dataObj, { abortEarly: false })
 
             const formData = makeFormData(fieldNames, dataObj)
 
@@ -70,11 +87,12 @@ export default function DataCreate({ setShowCreate, successNotify }) {
         } catch (error) {
             if (error.inner !== undefined) {
                 const errorsObj = {}
+                error.inner.pop()
                 for (const err of error.inner) {
                     errorsObj[err.path] = err.message
                 }
-                setErrors(errorsObj)
-            }else {
+                setErrors({ ...errorsObj })
+            } else {
                 console.log(error)
             }
         }

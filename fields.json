@@ -1,0 +1,72 @@
+[
+    {
+        "name": "company_name",
+        "title": "نام شرکت",
+        "status": true,
+        "selective": true,
+        "group": "input",
+        "type": "text",
+        "required": true,
+        "regex": null
+    },
+    {
+        "name": "phone",
+        "title": "شماره تماس",
+        "status": false,
+        "selective": false,
+        "group": "input",
+        "type": "text",
+        "required": false,
+        "regex": "^0\\d{2,3}\\d{8}$"
+    },
+    {
+        "name": "registration_id",
+        "title": "شناسه ثبت",
+        "status": false,
+        "selective": false,
+        "group": "input",
+        "type": "text",
+        "required": false,
+        "regex": null
+    },
+    {
+        "name": "license_image",
+        "title": "تصویر مجوز فعالیت",
+        "status": true,
+        "selective": false,
+        "group": "file_input",
+        "type": "file",
+        "required": true,
+        "regex": null
+    },
+    {
+        "name": "financial_strength",
+        "title": "توان مالی",
+        "status": true,
+        "selective": false,
+        "group": "input",
+        "type": "number",
+        "required": true,
+        "regex": null
+    },
+    {
+        "name": "office_address",
+        "title": "آدرس دفتر شرکت",
+        "status": true,
+        "selective": false,
+        "group": "textArea",
+        "type": "text",
+        "required": true,
+        "regex": "^[\\u0600-\\u06FF\\s\\d-–]+$"
+    },
+    {
+        "name": "capabilities",
+        "title": "توانمندی ها",
+        "status": false,
+        "selective": false,
+        "group": "textArea",
+        "type": "text",
+        "required": false,
+        "regex": null
+    }
+]

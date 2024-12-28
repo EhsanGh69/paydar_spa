@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 
 from django_jalali.db import models as jmodels
@@ -57,4 +58,28 @@ class Owner(models.Model):
 
     def __str__(self):
         return self.full_name
+    
 
+def license_image_path(instance, filename):
+    file_ext = filename.split('.')[-1]
+    time_str = str(datetime.now().time()).split('.')[0].replace(':', '_')
+    return f"license_images/{instance.company_name}_{time_str}.{file_ext}"
+    
+
+class Contractor(models.Model):
+    company_name = models.CharField(max_length=250, null=True, blank=True, verbose_name="نام شرکت")
+    phone = models.CharField(max_length=20, null=True, blank=True, verbose_name="شماره تماس")
+    office_address = models.TextField(null=True, blank=True, verbose_name="آدرس دفتر شرکت")
+    capabilities = models.TextField(null=True, blank=True, verbose_name="توانمندی ها")
+    registration_id = models.CharField(max_length=10, null=True, blank=True, verbose_name="شناسه ثبت")
+    license_image = models.ImageField(null=True, blank=True, upload_to=license_image_path, verbose_name='تصویر مجوز فعالیت')
+    financial_strength = models.PositiveBigIntegerField(null=True, blank=True, verbose_name='توان مالی')
+    created_time = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_time = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ ویرایش")
+
+    class Meta:
+        verbose_name = "پیمانکار"
+        verbose_name_plural = "پیمانکاران"
+
+    def __str__(self):
+        return self.company_name

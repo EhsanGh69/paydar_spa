@@ -1,6 +1,5 @@
-import { Formik } from 'formik'
-
 import Input from "./Input"
+import FileInput from "./FileInput"
 import TextArea from "./TextArea"
 import Select from "./Select"
 import ProvinceCounty from "./ProvinceCounty"
@@ -12,16 +11,6 @@ export default function CreateForm({ createForm, fields, getFormData, resetField
 
     return (
         <>
-            {/* <Formik
-                initialValues={dataObj}
-                validationSchema={schema}
-                onSubmit={(values) => createForm(values)}
-            >
-                {({ values, errors, handleSubmit }) => (
-                    
-                )}
-            </Formik> */}
-
             <form method="post" encType="multipart/form-data" onSubmit={createForm} ref={formRef}
                 className="border border-success rounded p-3 my-3">
                 <div className="row">
@@ -30,6 +19,12 @@ export default function CreateForm({ createForm, fields, getFormData, resetField
                             {field.group === 'input' &&
                                 (<Input type={field.type} name={field.name}
                                     holder={field.title} handler={getFormData}
+                                    error={errors[field.name]} />)
+                            }
+                            {field.group === 'file_input' &&
+                                (<FileInput name={field.name}
+                                    label={field.title} handler={getFormData}
+                                    formats="image/jpeg,image/png,image/gif,image/jpg"
                                     error={errors[field.name]} />)
                             }
                             {field.group === 'textArea' &&

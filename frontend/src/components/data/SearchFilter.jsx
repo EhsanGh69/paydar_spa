@@ -2,8 +2,7 @@ import { useContext } from "react"
 
 import { DataContext } from "../../context/dataContext"
 
-export default function SearchFilter() {
-
+export default function SearchFilter() {    
     const { 
         orderingFields, getOrderedData, 
         setOrderingField, currentPage, orderingField,

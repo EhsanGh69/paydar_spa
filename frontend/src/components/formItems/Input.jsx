@@ -2,8 +2,8 @@ export default function Input({ type, name, value, holder, handler, error }) {
   return (
     <>
       <div className="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text">{holder}</span>
+        <div className="input-group-prepend">
+          <span className="input-group-text">{holder}</span>
         </div>
         {name.includes('date')
           ? (
@@ -15,14 +15,19 @@ export default function Input({ type, name, value, holder, handler, error }) {
           )
           : (
             <input
+              min={0}
+              placeholder={type === 'number' ? 0 : ''}
               type={type} name={name} value={value}
               onChange={handler}
               className="form-control"
             />
-          )}
+          )
+        }
       </div>
       {error && (
-        <strong className="form-text text-danger">{error}</strong>
+        <strong className="form-text text-danger">
+          {error}
+        </strong>
       )}
     </>
   )

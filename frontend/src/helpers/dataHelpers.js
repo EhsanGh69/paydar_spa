@@ -49,6 +49,9 @@ export function makeFormData(fieldNames, dataObj) {
         else if(fieldName.includes('date')) {
             formData.append(fieldName, dateConvert(dataObj[fieldName]))
         }
+        else if(fieldName.includes('image') || fieldName.includes('file')) {
+            formData.append(fieldName, dataObj[fieldName], dataObj[fieldName].name)
+        }
         else formData.append(fieldName, dataObj[fieldName])
     })
 

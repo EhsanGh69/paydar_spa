@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Personnel, Owner
+from .models import Personnel, Owner, Contractor
 
 
 class PersonnelSerializer(serializers.ModelSerializer):
@@ -12,5 +12,10 @@ class PersonnelSerializer(serializers.ModelSerializer):
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Owner
+        exclude = ['created_time' ,'updated_time']
+
+class ContractorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contractor
         exclude = ['created_time' ,'updated_time']
 

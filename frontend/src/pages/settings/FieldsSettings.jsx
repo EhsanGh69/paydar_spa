@@ -91,6 +91,7 @@ export default function FieldsSettings() {
         return [
             { name: "personnel", title: "پرسنل" },
             { name: "owner", title: "مالکین" },
+            { name: "contractor", title: "پیمانکاران" },
         ]
     }, [selectChange])
 
@@ -172,6 +173,7 @@ export default function FieldsSettings() {
                                                                 className="form-check-input ml-1"
                                                                 value="true"
                                                                 onChange={(e) => getFormRequirement(e)}
+                                                                disabled={field.type === 'file' ? true : false}
                                                             />
                                                             <label className="form-check-label ml-4">
                                                                 اجباری
@@ -183,6 +185,7 @@ export default function FieldsSettings() {
                                                                 className="form-check-input ml-1"
                                                                 value="false"
                                                                 onChange={(e) => getFormRequirement(e)}
+                                                                disabled={field.type === 'file' ? true : false}
                                                             />
                                                             <label className="form-check-label ml-4">
                                                                 اختیاری
